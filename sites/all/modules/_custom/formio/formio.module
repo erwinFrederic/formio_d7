@@ -1,1 +1,27 @@
 <?php
+
+function formio_menu() {
+  $items['formio'] = array(
+          'title' => 'Form IO',
+          'page callback' => 'formio_template',
+          'access callback' => TRUE,
+      );
+      return $items;
+}
+
+function formio_theme()
+{
+    $themes = array(
+        'formio_template' => array(
+            'template' => 'templates/maint',
+            'arguments' => array(),
+        ),
+    );
+
+    return $themes;
+}
+
+function formio_template()
+{
+    return theme('formio_template');
+}
