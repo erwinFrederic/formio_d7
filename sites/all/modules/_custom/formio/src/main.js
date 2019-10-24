@@ -33,21 +33,10 @@ import '../assets/css/styles.css';
            },
           methods: {
              refineButton: function () {
-               var button = document.querySelector('.formio-component-submit button')
                var form = document.querySelector('.formarea')
                console.log( form )
                form.addEventListener ('DOMSubtreeModified', function() {
-                 console.log (button)
-                 function convertToObject(btn) {
-                    var obj = {}
-                    for (var p in btn) {
-                      obj[p] = btn[p];
-                    }
-                    return obj;
-                 }
-                 var allBtn = convertToObject(button)
-                 console.log (allBtn)
-                 allBtn.attributes[5] = ''
+                 document.querySelector('.formbuilder .formio-component-submit button').removeAttribute('disabled')
                })
              },
              onSubmit: function(event, e) {
