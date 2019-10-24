@@ -15,8 +15,7 @@ drupal_add_js(
       <div class="jsonStructure">
         {{ jsonFormDefinition }}
       </div>
-      <div class="">
-        {{ renderForm }}
+      <div id="renderForm">
       </div>
     </template>
 
