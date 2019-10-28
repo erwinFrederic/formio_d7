@@ -7,9 +7,7 @@ drupal_add_js(
 <link rel="stylesheet" href="https://unpkg.com/formiojs@4.0.0/dist/formio.full.min.css">
 
 <div id="formio">
-
     <template>
-
       <h1>formbuilder</h1>
       <formbuilder v-bind:form="form" v-on:submit="onSubmit(form)"></formbuilder>
       <div class="jsonStructure">
