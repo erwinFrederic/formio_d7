@@ -8,12 +8,13 @@ drupal_add_js(
 <div id="formio">
     <template>
       <h1>formbuilder</h1>
+      <div class="mb-10">
       <formbuilder v-bind:form="form" v-on:submit="onSubmit(form)"></formbuilder>
+      </div>
       <div class="jsonStructure">
         {{ jsonFormDefinition }}
       </div>
       <div id="renderForm">
       </div>
     </template>
-
 </div>
