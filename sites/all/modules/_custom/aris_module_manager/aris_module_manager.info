@@ -1,0 +1,4 @@
+name = Aris module manager
+description = Module that allows user to create module collections, and adding on it modules
+package = Aris
+core = 7.x

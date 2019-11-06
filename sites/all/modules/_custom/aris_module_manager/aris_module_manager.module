@@ -1,0 +1,150 @@
+<?php 
+
+/**
+ * implements hook_menu
+ */
+function aris_module_manager_menu () {
+
+    $items = [];
+
+    // module collection list/read
+    $items['module-collection/%id-group'] = array(
+        'title'             => t('Lister les collections de modules'),
+        'page callback'     => 'aris_module_manager_collection_list',
+        'access arguments'  => array('access content'),
+    );
+
+    // module collection create
+    $items['module-collection/%id-group/create'] = array(
+        'title'             => t('Créer une collection de modules'),
+        'page callback'     => 'aris_module_manager_collection_create_form',
+        'access arguments'  => array('access content'),
+    );
+
+    return $items;
+}
+
+/**
+ * implements hook_theme
+ */
+function aris_module_manager_theme () {
+    return array(
+        'aris_module_manager_collection_list'  => array(
+            'template' => 'collection-list',
+        ),
+    );
+}
+
+/**
+ * implements hook_node_info
+ */
+function aris_module_manager_node_info() {
+    
+    return array(
+      'collection' => array(
+        'name' => t('Collection de modules'),
+        'base' => 'collection',
+        'description' => t('Concepteur de collection de modules'),
+        'title_label' => t('Nom de la collection de modules'),
+        // 'locked' => TRUE,
+      ),
+    );
+}
+
+/**
+ * Implements hook_entity_info_alter().
+ */
+function aris_module_manager_entity_info_alter(&$entity_info) {
+    // Add our new view mode to the list of view modes...
+    $entity_info['node']['view modes']['collection_node_list'] = array(
+      'label' => t('Liste de collections de modules'),
+      'custom settings' => TRUE,
+    );
+  }
+
+/**
+ * implements hook_node_type_insert
+ */
+function aris_module_manager_node_type_insert($content_type) {
+    ddl ($content_type);
+    if ($content_type->type == 'collection') {
+      $body_instance = node_add_body_field($content_type, t('Description de la collection'));
+  
+      // Add our example_node_list view mode to the body instance
+      // display by instructing the body to display as a summary.
+      $body_instance['display']['collection_node_list'] = array(
+        'label' => 'hidden',
+        'type' => 'text_summary_or_trimmed',
+      );
+  
+      // Save our changes to the body field instance.
+      field_update_instance($body_instance);
+  
+      // Create all the fields we are adding to our content type.
+      foreach (_collection_fields() as $field) {
+        field_create_field($field);
+      }
+  
+      // Create all the instances for our fields.
+      foreach (_collection_instances() as $instance) {
+        $instance['entity_type'] = 'node';
+        $instance['bundle'] = 'collection';
+        field_create_instance($instance);
+      }
+    }
+  }
+  
+/**
+ * collection modules fields
+ */
+function _collection_fields() {
+    return array(
+        'collection_subgroup_visibility' => array(
+            'field_name'    => 'collection_subgroup_visibility',
+            'cardinality'   => 1,
+            'type'          => 'list_boolean',
+        ),
+        'collection_group' => array(
+            'field_name'  => 'collection_group',
+            'cardinality' => 1,
+            'type'        => 'entityreference',
+        ),
+    );
+}
+
+/**
+ * modules collection instance fields
+ */
+
+function _collection_instances() {
+    return array(
+      'collection_subgroup_visibility' => array(
+        'field_name'    => 'collection_subgroup_visibility',
+        'label'         => t('Visibilité sous groupes'),
+        'widget'        => array(
+          'type'    => 'boolean',
+        ),
+        'display' => array(
+          'collection_node_list' => array(
+            'label' => 'hidden',
+            'type' => 'collection_subgroup_visibility',
+          ),
+        ),
+      ),
+      'collection_group' => array(
+        'field_name'  => 'collection_group',
+        'label' => t('Groupes'),
+        'type'        => 'text',
+        'widget'      => array(
+          'type'    => 'entityreference',
+        ),
+        'display' => array(
+          'collection_node_list' => array(
+            'label' => 'hidden',
+            'type' => 'hidden',
+          ),
+        ),
+      ),
+      
+    );
+  }
